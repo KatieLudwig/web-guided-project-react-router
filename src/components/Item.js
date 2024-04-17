@@ -1,5 +1,6 @@
 import React from 'react'
 // We'll need quite a few imports from react-router-dom
+import { useParams, NavLink, Routes, Route } from 'react-router-dom'
 
 import ItemDetails from './ItemDetails'
 
@@ -12,7 +13,10 @@ export default function Item(props) {
   // Beware! The JSX is expecting 'item' to exist instantly!
   // we need useParams to grab the dynamic parts of the path (:itemID).
 
-  const item = {}
+  const { itemID } = useParams();
+   
+
+  const item = items.find(it => it.id == itemID)
 
   // This guards against a crash (the data is not available instantaneously)
   if (!items.length) return 'Getting your item...'
@@ -31,12 +35,17 @@ export default function Item(props) {
 
       <nav className='item-sub-nav'>
         {/* 👉 STEP 8 - Here go the NavLinks to `<current url>/shipping` and `<current url>/description` */}
+        <NavLink to="description">Description</NavLink>
+        <NavLink to="shipping">Shipping</NavLink>
 
       </nav>
 
       {/* 👉 STEP 9 - Here go the Routes for `<current path>/shipping` and `<current path>/description` */}
       {/* These Routes should render <ItemDetails />  */}
-
+    <Routes>
+      <Route path="description" element={<ItemDetails text={item.description} />} />
+      <Route path="shipping" element={<ItemDetails text={item.shipping} />} />
+    </Routes>
     </div>
   )
 }
